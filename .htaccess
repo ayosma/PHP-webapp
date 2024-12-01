@@ -1,0 +1,26 @@
+# Prevent directory listing
+Options -Indexes
+
+# Protect files and directories from prying eyes
+<FilesMatch "^(config|includes)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent direct access to PHP files in includes directory
+<Files "*.php">
+    Order Deny,Allow
+    Deny from all
+</Files>
+
+# Allow access to public files
+<Directory "public">
+    Order Allow,Deny
+    Allow from all
+</Directory>
+
+# Redirect all requests to index.php if the file doesn't exist
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
